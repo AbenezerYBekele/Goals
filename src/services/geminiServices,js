@@ -1,0 +1,222 @@
+import { GoogleGenAI, Type } from "@google/genai";
+import { GoalStatus } from "../types";
+
+const apiKey = process.env.API_KEY || '';
+const ai = new GoogleGenAI({ apiKey });
+
+export const GeminiService = {
+  /**
+   * Refines a rough goal description into a structured SMART goal.
+   */
+  async refineToSmart(description, horizon) {
+    if (!apiKey) throw new Error("API Key not found");
+
+    const model = 'gemini-2.5-flash';
+    const prompt = `Convert the following ${horizon} goal into a rigorous SMART goal. 
+    User Input: "${description}"
+    
+    Ensure the response is realistic and highly strategic.`;
+
+    const response = await ai.models.generateContent({
+      model,
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            title: { type: Type.STRING, description: "A concise, punchy title for the goal" },
+            description: { type: Type.STRING, description: "A brief summary of the goal" },
+            smart: {
+              type: Type.OBJECT,
+              properties: {
+                specific: { type: Type.STRING },
+                measurable: { type: Type.STRING },
+                achievable: { type: Type.STRING },
+                relevant: { type: Type.STRING },
+                timeBound: { type: Type.STRING }
+              },
+              required: ["specific", "measurable", "achievable", "relevant", "timeBound"]
+            }
+          },
+          required: ["title", "description", "smart"]
+        }
+      }
+    });
+
+    const text = response.text;
+    if (!text) throw new Error("No response from AI");
+    return JSON.parse(text);
+  },
+
+  /**
+   * Generates a comprehensive strategic plan (Annual -> Monthly -> Weekly -> Daily) from a vision.
+   */
+  async generateStrategicPlan(vision, category) {
+    if (!apiKey) throw new Error("API Key not found");
+
+    const prompt = `Create a complete strategic life plan based on this user vision: "${vision}" in the category "${category}".
+    
+    Return a single JSON object containing:
+    1. One 'annual' SMART goal object (with title, description, smart criteria).
+    2. An array of 3 'monthly' milestone objects (title, description) that support the annual goal.
+    3. An array of 2 'weekly' task objects (title, description) that support the first month.
+    4. An array of 3 'daily' task objects (title, description) that support the first week.
+    
+    Structure:
+    {
+      "annual": { ... },
+      "monthly": [ ... ],
+      "weekly": [ ... ],
+      "daily": [ ... ]
+    }`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            annual: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                smart: {
+                  type: Type.OBJECT,
+                  properties: {
+                    specific: { type: Type.STRING },
+                    measurable: { type: Type.STRING },
+                    achievable: { type: Type.STRING },
+                    relevant: { type: Type.STRING },
+                    timeBound: { type: Type.STRING }
+                  },
+                  required: ["specific", "measurable", "achievable", "relevant", "timeBound"]
+                }
+              },
+              required: ["title", "description", "smart"]
+            },
+            monthly: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: { title: { type: Type.STRING }, description: { type: Type.STRING } },
+                required: ["title", "description"]
+              }
+            },
+            weekly: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: { title: { type: Type.STRING }, description: { type: Type.STRING } },
+                required: ["title", "description"]
+              }
+            },
+            daily: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: { title: { type: Type.STRING }, description: { type: Type.STRING } },
+                required: ["title", "description"]
+              }
+            }
+          },
+          required: ["annual", "monthly", "weekly", "daily"]
+        }
+      }
+    });
+
+    const text = response.text;
+    if (!text) throw new Error("No response from AI");
+    return JSON.parse(text);
+  },
+
+  /**
+   * Generates sub-goals based on a parent goal.
+   * e.g., Annual -> 12 Monthly goals or Key Milestones
+   */
+  async breakdownGoal(parentGoal) {
+    if (!apiKey) throw new Error("API Key not found");
+
+    let childHorizon;
+    let count;
+
+    switch (parentGoal.horizon) {
+      case 'annual': childHorizon = 'monthly'; count = 4; break; // Suggest key milestones
+      case 'monthly': childHorizon = 'weekly'; count = 4; break;
+      case 'weekly': childHorizon = 'daily'; count = 5; break;
+      default: return [];
+    }
+
+    const prompt = `Break down the following ${parentGoal.horizon} goal into ${count} actionable ${childHorizon} sub-goals/milestones.
+    Parent Goal: "${parentGoal.title}"
+    SMART Details: ${JSON.stringify(parentGoal.smartCriteria)}
+    
+    Return a list of specific sub-goals.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              dueDateOffset: { type: Type.NUMBER, description: "Suggested days from now to due date" }
+            },
+            required: ["title", "description"]
+          }
+        }
+      }
+    });
+
+    const text = response.text;
+    if (!text) throw new Error("No response from AI");
+    
+    const rawData = JSON.parse(text);
+    
+    // Map to partial Goal objects
+    return rawData.map(item => ({
+      title: item.title,
+      description: item.description,
+      horizon: childHorizon,
+      status: GoalStatus.NOT_STARTED,
+      progress: 0,
+      dueDateOffset: item.dueDateOffset,
+      smartCriteria: {
+        specific: item.description,
+        measurable: "To be defined",
+        achievable: "To be defined",
+        relevant: `Contributes to ${parentGoal.title}`,
+        timeBound: "To be scheduled"
+      }
+    }));
+  },
+
+  /**
+   * Provides strategic advice or motivation.
+   */
+  async getAdvice(goals) {
+    if (!apiKey) return "API Key missing. Add it to environment variables to get AI advice.";
+
+    const activeGoals = goals.filter(g => g.status === GoalStatus.IN_PROGRESS).map(g => `${g.horizon}: ${g.title}`);
+    const prompt = `You are a world-class strategic life coach. 
+    Here are the user's current active goals:
+    ${activeGoals.join('\n')}
+    
+    Give a concise (max 3 sentences) piece of strategic advice or motivation to keep them on track today.`;
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+    });
+
+    return response.text || "Keep pushing forward!";
+  }
+};
