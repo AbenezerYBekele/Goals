@@ -3,14 +3,16 @@ import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, '.', '');
   return {
     plugins: [react()],
-    // This makes process.env.API_KEY work in your code
+    // IMPORTANT: This base path must match your repository name exactly for GitHub Pages
+    // Since your URL is https://abenezerybekele.github.io/Goals/, the base is '/Goals/'
+    base: '/Goals/',
     define: {
-      'process.env.API_KEY': JSON.stringify(env.VITE_API_KEY)
-    },
-    // IMPORTANT: Change 'goals-app' to your GitHub repository name
-    base: '/goals-app/', 
+      // Fixes "process is not defined" error in browser
+      'process.env.API_KEY': JSON.stringify(env.API_KEY || ""),
+      'process.env': {} 
+    }
   }
 })
