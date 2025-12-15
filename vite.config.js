@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     // IMPORTANT: This base path must match your repository name exactly for GitHub Pages
     // Since your URL is https://abenezerybekele.github.io/Goals/, the base is '/Goals/'
-    base: '/Goals/',
+    base: '/GOALS/',
     define: {
       // Fixes "process is not defined" error in browser
       'process.env.API_KEY': JSON.stringify(env.API_KEY || ""),
