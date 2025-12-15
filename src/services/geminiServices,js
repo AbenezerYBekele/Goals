@@ -1,15 +1,19 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { GoalStatus } from "../types";
 
-const apiKey = process.env.API_KEY || '';
-const ai = new GoogleGenAI({ apiKey });
+// Helper to initialize AI only when needed, preventing crash at module import time
+const getAi = () => {
+  const apiKey = process.env.API_KEY || '';
+  return new GoogleGenAI({ apiKey });
+};
 
 export const GeminiService = {
   /**
    * Refines a rough goal description into a structured SMART goal.
    */
   async refineToSmart(description, horizon) {
-    if (!apiKey) throw new Error("API Key not found");
+    const ai = getAi();
+    if (!process.env.API_KEY) throw new Error("API Key not found");
 
     const model = 'gemini-2.5-flash';
     const prompt = `Convert the following ${horizon} goal into a rigorous SMART goal. 
@@ -53,7 +57,8 @@ export const GeminiService = {
    * Generates a comprehensive strategic plan (Annual -> Monthly -> Weekly -> Daily) from a vision.
    */
   async generateStrategicPlan(vision, category) {
-    if (!apiKey) throw new Error("API Key not found");
+    const ai = getAi();
+    if (!process.env.API_KEY) throw new Error("API Key not found");
 
     const prompt = `Create a complete strategic life plan based on this user vision: "${vision}" in the category "${category}".
     
@@ -138,7 +143,8 @@ export const GeminiService = {
    * e.g., Annual -> 12 Monthly goals or Key Milestones
    */
   async breakdownGoal(parentGoal) {
-    if (!apiKey) throw new Error("API Key not found");
+    const ai = getAi();
+    if (!process.env.API_KEY) throw new Error("API Key not found");
 
     let childHorizon;
     let count;
@@ -203,7 +209,8 @@ export const GeminiService = {
    * Provides strategic advice or motivation.
    */
   async getAdvice(goals) {
-    if (!apiKey) return "API Key missing. Add it to environment variables to get AI advice.";
+    const ai = getAi();
+    if (!process.env.API_KEY) return "API Key missing. Add it to environment variables to get AI advice.";
 
     const activeGoals = goals.filter(g => g.status === GoalStatus.IN_PROGRESS).map(g => `${g.horizon}: ${g.title}`);
     const prompt = `You are a world-class strategic life coach. 
