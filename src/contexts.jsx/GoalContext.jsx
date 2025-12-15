@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { GoalStatus } from '../types';
 
-const GoalContext = createContext(undefined);
+// Fixed: Use any generic for context to avoid 'undefined' inference issues in consuming hooks
+const GoalContext = createContext<any>(undefined);
 
 const STORAGE_KEY = 'stratlife_goals_v1';
 
-export const GoalProvider = ({ children }) => {
+// Fixed: Explicitly typed 'children' prop to resolve "Property 'children' is missing" error
+// Made children optional to handle JSX type checking behavior where attributes are validated before children injection
+export const GoalProvider = ({ children }: { children?: React.ReactNode }) => {
   const [goals, setGoals] = useState([]);
   const [aiAdvice, setAiAdvice] = useState("Ready to plan your life?");
 
