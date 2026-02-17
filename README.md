@@ -1,18 +1,65 @@
-# React + Vite
+# 🎯 Goals Application
+<br>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Goals is a sleek and intuitive mobile application designed to help users define, track, and achieve their personal and professional milestones. Built with a focus on user experience and productivity, it turns long-term ambitions into manageable daily tasks
+<br>
 
-Currently, two official plugins are available:
+## 🚀 Key Features
+<br>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✅ **Goal Management**  
+ ✅ Goal Creation: Easily set SMART goals with titles, descriptions, and deadlines.\
+📈 Progress Tracking: Visual indicators to see how close you are to completing your objectives.\
+🔔 Smart Notifications: Stay on track with reminders for upcoming deadlines.\
+🌗 Dark Mode Support: A beautiful interface that respects your system settings.\
+💾 Offline Persistence: Your data is saved locally, so you never lose track of your progress.\
+<br>
 
-## React Compiler
+📈 **Tech Stack**  
+Framework: React Native \
+State Management: Redux Toolkit / Context API \
+Storage: AsyncStorage / Firebase \
+Styling: Styled Components / NativeWind \
+Icons: Lucide React Native / Vector Icons \
+<br>
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+🔔 **Smart Reminders**  
+Never forget a deadline with built-in push notifications.  
+Customizable alerts to keep you on your daily schedule.  
+<br>
 
-Note: This will impact Vite dev & build performances.
+**Getting Started**  
+*Prerequisites*\
+Node.js (v16 or newer)\
+React Native CLI\
+Android Studio (for Android) or Xcode (for iOS)\
+<br>
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🏁 Getting Started
+<br>
+
+**1. Clone the repository**  
+`git clone https://github.com/AbenezerYBekele/Goals.git`  
+<br>
+
+**2. Install dependencies**  
+`npm install`  
+<br>
+
+**3. Run the app**  
+`npx react-native run-android`  
+or  
+`npx react-native run-ios`  
+<br>
+
+## 🤝 Contributing
+<br>
+
+Contributions are always welcome.  
+Please open an issue first to discuss what you would like to change.  
+Ensure you update tests as appropriate.  
+<br>
+
+---
+**Developed by [Abenezer Y. Bekele](https://github.com/AbenezerYBekele)**
