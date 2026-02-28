@@ -1,7 +1,8 @@
 # 🎯 Goals Application
-<br>
 
-Goals is a sleek and intuitive mobile application designed to help users define, track, and achieve their personal and professional milestones. Built with a focus on user experience and productivity, it turns long-term ambitions into manageable daily tasks
+[WebApp link](https://goals-strategic-life-planner-714935303433.us-west1.run.app/) 
+<br>
+Goals is a sleek and intuitive webApp designed to help users define, track, and achieve their personal and professional milestones. Built with a focus on user experience and productivity, it turns long-term ambitions into manageable daily tasks
 <br>
 <img width="300" height="700" alt="Screenshot 2026-02-28 133432" src="https://github.com/user-attachments/assets/bf7893b4-630d-44e3-9bc9-1f3d4f0c9335" />
 <img width="300" height="700" alt="Screenshot 2026-02-28 133405" src="https://github.com/user-attachments/assets/bae18852-9026-4856-8ed8-2567afbe52ff" />
