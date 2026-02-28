@@ -5,8 +5,8 @@
 Goals is a sleek and intuitive webApp designed to help users define, track, and achieve their personal and professional milestones. Built with a focus on user experience and productivity, it turns long-term ambitions into manageable daily tasks
 <br>
 
-<img width="280" height="600" alt="Screenshot 2026-02-28 133432" src="https://github.com/user-attachments/assets/bf7893b4-630d-44e3-9bc9-1f3d4f0c9335" />
-<img width="280" height="600" alt="Screenshot 2026-02-28 133405" src="https://github.com/user-attachments/assets/bae18852-9026-4856-8ed8-2567afbe52ff" />
+<img width="270" height="600" alt="Screenshot 2026-02-28 133432" src="https://github.com/user-attachments/assets/bf7893b4-630d-44e3-9bc9-1f3d4f0c9335" />
+<img width="270" height="600" alt="Screenshot 2026-02-28 133405" src="https://github.com/user-attachments/assets/bae18852-9026-4856-8ed8-2567afbe52ff" />
 <img width="280" height="600" alt="Screenshot 2026-02-28 133349" src="https://github.com/user-attachments/assets/1d015ae1-3ea9-4291-bcc4-c4eda3991ad2" />
 
 
